@@ -137,6 +137,16 @@ impl<Real,N> MultivariateNormal<Real,N>
         Ok(result)
     }
 
+    /// Get the mean of the distribution
+    pub fn mean(&self) -> nalgebra::VectorN<Real,N> {
+        -&self.neg_mu
+    }
+
+    /// Get the precision of the distribution
+    pub fn precision(&self) -> &nalgebra::MatrixN<Real,N> {
+        &self.precision
+    }
+
     fn inner_pdf<Count>(
         &self,
         xs_t: &nalgebra::MatrixMN<Real,Count,N>,
@@ -311,6 +321,17 @@ mod tests {
         );
 
         relative_eq!(c, expected);
+    }
+
+    #[test]
+    fn test_mean_and_precision() {
+        let mu = na::Vector2::<f64>::new(0.0,0.0);
+        let precision = na::Matrix2::<f64>::new(1.0, 0.0, 0.0, 1.0);
+
+        let mvn = MultivariateNormal::from_mean_and_precision(&mu, &precision);
+
+        assert!(mu==mvn.mean());
+        assert!(&precision==mvn.precision());
     }
 
     #[test]
