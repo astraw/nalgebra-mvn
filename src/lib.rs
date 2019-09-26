@@ -357,9 +357,9 @@ mod tests {
     fn test_density() {
         // parameters for a standard normal (mean=0, sigma=1)
         let mu = na::Vector2::<f64>::new(0.0,0.0);
-        let sigma = na::Matrix2::<f64>::new(1.0, 0.0, 0.0, 1.0);
+        let precision = na::Matrix2::<f64>::new(1.0, 0.0, 0.0, 1.0);
 
-        let mvn = MultivariateNormal::from_mean_and_precision(&mu, &sigma);
+        let mvn = MultivariateNormal::from_mean_and_precision(&mu, &precision);
 
         let xs = na::MatrixMN::<f64,na::U2,na::U3>::new(
             0.0, 1.0, 0.0,
