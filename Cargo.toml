@@ -9,7 +9,7 @@ repository = "https://github.com/astraw/nalgebra-mvn"
 readme="README.md"
 
 [dependencies]
-nalgebra = "0.19"
+nalgebra = "0.22"
 
 [dev-dependencies]
 approx = "0.3"
