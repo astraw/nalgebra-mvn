@@ -13,7 +13,7 @@ nalgebra = "0.22"
 
 [dev-dependencies]
 approx = "0.3"
-criterion = "0.2"
+criterion = "0.3"
 
 [[bench]]
 name = "bench"
