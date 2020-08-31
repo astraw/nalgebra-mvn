@@ -120,7 +120,7 @@ print('all results close')
     // run Python file to check results
     // --------------------------------------------------------------------
 
-    let output = std::process::Command::new("python")
+    let output = std::process::Command::new("python3")
         .arg(py_fname)
         .output()
         .expect("Failed to execute command");
