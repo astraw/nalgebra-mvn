@@ -112,12 +112,12 @@ print('all results close')
     // run Python file to check results
     // --------------------------------------------------------------------
 
-    let output = std::process::Command::new("python3")
+    let status = std::process::Command::new("python3")
         .arg(py_fname)
-        .output()
+        .status()
         .expect("Failed to execute command");
 
-    if !output.status.success() {
+    if !status.success() {
         panic!("calling python script at \"{}\" failed", py_fname);
     }
 }
