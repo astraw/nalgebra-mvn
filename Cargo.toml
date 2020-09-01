@@ -8,6 +8,9 @@ edition = "2018"
 repository = "https://github.com/astraw/nalgebra-mvn"
 readme="README.md"
 
+[badges]
+github = { repository = "astraw/nalgebra-mvn" }
+
 [dependencies]
 nalgebra = "0.22"
 
