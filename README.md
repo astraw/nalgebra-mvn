@@ -1,3 +1,6 @@
+[![Crates.io](https://img.shields.io/crates/v/nalgebra-mvn.svg)](https://crates.io/crates/nalgebra-mvn)
+[![Workflow Status](https://github.com/astraw/nalgebra-mvn/workflows/main/badge.svg)](https://github.com/astraw/nalgebra-mvn/actions?query=workflow%3A%22main%22)
+
 # nalgebra-mvn
 
 Multivariate normal distribution using [nalgebra](https://nalgebra.org).
