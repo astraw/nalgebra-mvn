@@ -275,19 +275,20 @@ mod tests {
 
     /// Calculate the sample covariance
     ///
-    /// Calculates the sample covariances among K variables based on N observations
-    /// each. Calculates K x K covariance matrix from observations in `arr`, which
-    /// is N rows of K columns used to store N vectors of dimension K.
-    fn sample_covariance<Real: RealField, N: Dim, K: Dim>(
-        arr: &MatrixMN<Real, N, K>,
-    ) -> nalgebra::MatrixN<Real, K>
+    /// Calculates the sample covariances among N-dimensional samples with M
+    /// observations each. Calculates N x N covariance matrix from observations
+    /// in `arr`, which is M rows of N columns used to store M vectors of
+    /// dimension N.
+    fn sample_covariance<Real: RealField, M: Dim, N: Dim>(
+        arr: &MatrixMN<Real, M, N>,
+    ) -> nalgebra::MatrixN<Real, N>
     where
-        DefaultAllocator: Allocator<Real, N, K>,
-        DefaultAllocator: Allocator<Real, K, N>,
-        DefaultAllocator: Allocator<Real, K, K>,
-        DefaultAllocator: Allocator<Real, K>,
+        DefaultAllocator: Allocator<Real, M, N>,
+        DefaultAllocator: Allocator<Real, N, M>,
+        DefaultAllocator: Allocator<Real, N, N>,
+        DefaultAllocator: Allocator<Real, N>,
     {
-        let mu: VectorN<Real, K> = mean_axis0(arr);
+        let mu: VectorN<Real, N> = mean_axis0(arr);
         let y = broadcast_add(arr, &-mu);
         let n: Real = Real::from_usize(arr.nrows()).unwrap();
         let sigma = (y.transpose() * y) / (n - Real::one());
