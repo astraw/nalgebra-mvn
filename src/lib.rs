@@ -270,7 +270,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::*;
-    use approx::relative_eq;
+    use approx::assert_relative_eq;
     use nalgebra as na;
 
     /// Calculate the sample covariance
@@ -318,13 +318,17 @@ mod tests {
     fn test_covar() {
         use nalgebra::core::dimension::{U2, U3};
 
-        let arr = MatrixMN::<f64, U3, U2>::new(1.0, 0.1, 2.0, 0.2, 3.0, 0.3);
+        // We use the same example as https://numpy.org/doc/stable/reference/generated/numpy.cov.html
+
+        // However, our format is transposed compared to numpy. We have
+        // variables as the columns and samples as rows.
+        let arr = MatrixMN::<f64, U2, U3>::new(-2.1, -1.0, 4.3, 3.0, 1.1, 0.12).transpose();
 
         let c = sample_covariance(&arr);
 
-        let expected = nalgebra::MatrixN::<f64, U2>::new(0.2, 0.1, 0.1, 0.01);
+        let expected = nalgebra::MatrixN::<f64, U2>::new(11.71, -4.286, -4.286, 2.144133);
 
-        assert!(relative_eq!(c, expected));
+        assert_relative_eq!(c, expected, epsilon = 1e-3);
     }
 
     #[test]
@@ -372,6 +376,34 @@ mod tests {
 
     #[test]
     fn test_density() {
+        /*
+
+        # This test in Python:
+
+        from scipy.stats import multivariate_normal
+        import numpy as np
+
+        xs = np.array([[0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]).T
+
+        mu = np.array([
+            [0],
+            [0],
+        ], dtype=np.float)
+
+        covariance = np.array([
+            [1, 0],
+            [0, 1]], dtype=np.float)
+
+        result = np.array(
+            [0.15915494, 0.09653235, 0.09653235], dtype=np.float)
+
+        result_py = multivariate_normal.pdf(xs, mean=mu[:,0], cov=covariance)
+        # print(result_py)
+        np.testing.assert_allclose(result, result_py)
+        print('all results close')
+
+        */
+
         // parameters for a standard normal (mean=0, sigma=1)
         let mu = na::Vector2::<f64>::new(0.0, 0.0);
         let precision = na::Matrix2::<f64>::new(1.0, 0.0, 0.0, 1.0);
@@ -386,24 +418,15 @@ mod tests {
         for i in 0..xs.nrows() {
             let x = xs.row(i).clone_owned();
             let di = mvn.pdf(&x)[0];
-            assert!(relative_eq!(di, results[i], epsilon = 1e-10));
+            assert_relative_eq!(di, results[i], epsilon = 1e-10);
         }
 
+        dbg!((results[0], 0.15915494));
+
+        let epsilon = 1e-5;
         // some spot checks with standard normal
-        assert!(relative_eq!(
-            results[0],
-            1.0 / (2.0 * std::f64::consts::PI).sqrt(),
-            epsilon = 1e-10
-        ));
-        assert!(relative_eq!(
-            results[1],
-            1.0 / (2.0 * std::f64::consts::PI).sqrt() * (-0.5f64 * 1.0f64).exp(),
-            epsilon = 1e-10
-        ));
-        assert!(relative_eq!(
-            results[2],
-            1.0 / (2.0 * std::f64::consts::PI).sqrt() * (-0.5f64 * 1.0f64).exp(),
-            epsilon = 1e-10
-        ));
+        assert_relative_eq!(results[0], 0.15915494, epsilon = epsilon);
+        assert_relative_eq!(results[1], 0.09653235, epsilon = epsilon);
+        assert_relative_eq!(results[2], 0.09653235, epsilon = epsilon);
     }
 }
