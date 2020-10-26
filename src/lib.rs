@@ -323,7 +323,7 @@ mod tests {
 
         let expected = nalgebra::MatrixN::<f64, U2>::new(0.2, 0.1, 0.1, 0.01);
 
-        relative_eq!(c, expected);
+        assert!(relative_eq!(c, expected));
     }
 
     #[test]
@@ -385,24 +385,24 @@ mod tests {
         for i in 0..xs.nrows() {
             let x = xs.row(i).clone_owned();
             let di = mvn.pdf(&x)[0];
-            relative_eq!(di, results[i], epsilon = 1e-10);
+            assert!(relative_eq!(di, results[i], epsilon = 1e-10));
         }
 
         // some spot checks with standard normal
-        relative_eq!(
+        assert!(relative_eq!(
             results[0],
             1.0 / (2.0 * std::f64::consts::PI).sqrt(),
             epsilon = 1e-10
-        );
-        relative_eq!(
+        ));
+        assert!(relative_eq!(
             results[1],
             1.0 / (2.0 * std::f64::consts::PI).sqrt() * (-0.5f64 * 1.0f64).exp(),
             epsilon = 1e-10
-        );
-        relative_eq!(
+        ));
+        assert!(relative_eq!(
             results[2],
             1.0 / (2.0 * std::f64::consts::PI).sqrt() * (-0.5f64 * 1.0f64).exp(),
             epsilon = 1e-10
-        );
+        ));
     }
 }
