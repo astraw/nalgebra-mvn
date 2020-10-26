@@ -15,7 +15,7 @@ github = { repository = "astraw/nalgebra-mvn" }
 nalgebra = "0.22"
 
 [dev-dependencies]
-approx = "0.3"
+approx = "0.4"
 criterion = "0.3"
 
 [[bench]]
