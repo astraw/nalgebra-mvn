@@ -12,7 +12,7 @@ readme="README.md"
 github = { repository = "astraw/nalgebra-mvn" }
 
 [dependencies]
-nalgebra = "0.24"
+nalgebra = "0.25"
 
 [dev-dependencies]
 approx = "0.4"
