@@ -1,14 +1,13 @@
-[![Crates.io](https://img.shields.io/crates/v/nalgebra-mvn.svg)](https://crates.io/crates/nalgebra-mvn)
-[![Workflow Status](https://github.com/astraw/nalgebra-mvn/workflows/main/badge.svg)](https://github.com/astraw/nalgebra-mvn/actions?query=workflow%3A%22main%22)
-
 # nalgebra-mvn
+
+[![Crates.io](https://img.shields.io/crates/v/nalgebra-mvn.svg)](https://crates.io/crates/nalgebra-mvn)
 
 Multivariate normal distribution using [nalgebra](https://nalgebra.org).
 
 ## Example of usage
 
 ```rust
-use nalgebra::{ Vector2, Matrix2, MatrixMN, U2, U3};
+use nalgebra::{ Vector2, Matrix2, OMatrix, U2, U3};
 use nalgebra_mvn::MultivariateNormal;
 
 // specify mean and covariance of our multi-variate normal
@@ -20,7 +19,7 @@ let sigma = Matrix2::from_row_slice(
 let mvn = MultivariateNormal::from_mean_and_covariance(&mu, &sigma).unwrap();
 
 // input samples are row vectors vertically stacked
-let xs = MatrixMN::<_,U3,U2>::new(
+let xs = OMatrix::<_,U3,U2>::new(
     8.9, 1.0,
     9.0, 1.0,
     9.1, 1.0,
