@@ -1,4 +1,4 @@
-use nalgebra::{Matrix2, MatrixMN, Vector2, U2, U3};
+use nalgebra::{Matrix2, OMatrix, Vector2, U2, U3};
 use nalgebra_mvn::MultivariateNormal;
 
 fn main() {
@@ -9,7 +9,7 @@ fn main() {
     let mvn = MultivariateNormal::from_mean_and_covariance(&mu, &sigma).unwrap();
 
     // input samples are row vectors vertically stacked
-    let xs = MatrixMN::<_, U3, U2>::new(8.9, 1.0, 9.0, 1.0, 9.1, 1.0);
+    let xs = OMatrix::<_, U3, U2>::new(8.9, 1.0, 9.0, 1.0, 9.1, 1.0);
 
     // evaluate the density at each of our samples.
     let result = mvn.pdf(&xs);

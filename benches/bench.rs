@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use nalgebra::{Matrix2, MatrixMN, Vector2, U2, U3};
+use nalgebra::{Matrix2, OMatrix, Vector2, U2, U3};
 use nalgebra_mvn::MultivariateNormal;
 
 fn bench_pdf(c: &mut Criterion) {
@@ -28,7 +28,7 @@ fn bench_pdf(c: &mut Criterion) {
 
     {
         let mvn = mvn.clone();
-        let xs = MatrixMN::<f64, nalgebra::Dynamic, U2>::from_fn_generic(
+        let xs = OMatrix::<f64, nalgebra::Dynamic, U2>::from_fn_generic(
             nalgebra::Dynamic::new(100000),
             U2,
             |row, col| {
@@ -46,7 +46,7 @@ fn bench_pdf(c: &mut Criterion) {
     {
         let mvn = mvn.clone();
         // input samples are row vectors vertically stacked
-        let xs = MatrixMN::<_, U3, U2>::new(8.9, 1.0, 9.0, 1.0, 9.1, 1.0);
+        let xs = OMatrix::<_, U3, U2>::new(8.9, 1.0, 9.0, 1.0, 9.1, 1.0);
 
         c.bench_function("pdf_3x2", move |b| b.iter(|| mvn.pdf(&xs)));
     }
