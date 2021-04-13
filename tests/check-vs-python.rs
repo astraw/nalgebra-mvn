@@ -25,10 +25,10 @@ macro_rules! mat_to_vec_string {
 }
 
 fn pythonize_expectations<Real, S, Count>(
-    xs: &nalgebra::MatrixMN<Real, Count, S>,
-    mu: &nalgebra::VectorN<Real, S>,
-    covariance: &nalgebra::MatrixN<Real, S>,
-    result: &nalgebra::VectorN<Real, Count>,
+    xs: &nalgebra::OMatrix<Real, Count, S>,
+    mu: &nalgebra::OVector<Real, S>,
+    covariance: &nalgebra::OMatrix<Real, S, S>,
+    result: &nalgebra::OVector<Real, Count>,
 ) -> Vec<String>
 where
     Real: RealField,
@@ -66,7 +66,7 @@ fn test_vs_scipy_stats() {
     let mvn = MultivariateNormal::from_mean_and_precision(&mu, &precision);
 
     // input samples are row vectors vertically stacked
-    let xs = MatrixMN::<_, U5, U3>::new(
+    let xs = OMatrix::<_, U5, U3>::new(
         8.9, 1.0, 21.0, 9.0, 1.0, 21.0, 9.1, 1.0, 21.0, 10.1, 2.2, 21.2, -1.1, -2.2, 22.2,
     );
 
