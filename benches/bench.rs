@@ -28,9 +28,8 @@ fn bench_pdf(c: &mut Criterion) {
 
     {
         let mvn = mvn.clone();
-        let xs = OMatrix::<f64, nalgebra::Dynamic, U2>::from_fn_generic(
-            nalgebra::Dynamic::new(100000),
-            U2,
+        let xs = OMatrix::<f64, nalgebra::Dynamic, U2>::from_fn(
+            100000,
             |row, col| {
                 if col == 0 {
                     row as f64
