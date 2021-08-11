@@ -192,7 +192,7 @@ where
         DefaultAllocator: Allocator<Real, Count, Count>,
     {
         let y = self.inner_pdf(xs);
-        vec_exp(&y) * self.fac
+        vec_exp(&y) * self.fac.clone()
     }
 
     /// Log of the probability density function
@@ -210,7 +210,7 @@ where
         DefaultAllocator: Allocator<Real, Count, Count>,
     {
         let y = self.inner_pdf(xs);
-        vec_add(&y, self.fac.ln())
+        vec_add(&y, self.fac.clone().ln())
     }
 }
 
@@ -221,7 +221,7 @@ where
     DefaultAllocator: Allocator<Real, Count>,
 {
     let nrows = Count::from_usize(v.nrows());
-    OVector::from_iterator_generic(nrows, nalgebra::Const, v.iter().map(|vi| vi.exp()))
+    OVector::from_iterator_generic(nrows, nalgebra::Const, v.iter().map(|vi| vi.clone().exp()))
 }
 
 fn vec_add<Real, Count>(
@@ -234,7 +234,11 @@ where
     DefaultAllocator: Allocator<Real, Count>,
 {
     let nrows = Count::from_usize(v.nrows());
-    OVector::from_iterator_generic(nrows, nalgebra::Const, v.iter().map(|vi| *vi + rhs))
+    OVector::from_iterator_generic(
+        nrows,
+        nalgebra::Const,
+        v.iter().map(|vi| vi.clone() + rhs.clone()),
+    )
 }
 
 /// Add `vec` to each row of `arr`, returning the result with shape of `arr`.
@@ -262,7 +266,7 @@ where
         ncols,
         arr.iter().enumerate().map(|(i, el)| {
             let vi = i / ndim; // integer div to get index into vec
-            *el + vec[vi]
+            el.clone() + vec[vi].clone()
         }),
     )
 }
@@ -290,7 +294,7 @@ mod tests {
     {
         let mu: OVector<Real, N> = mean_axis0(arr);
         let y = broadcast_add(arr, &-mu);
-        let n: Real = Real::from_usize(arr.nrows()).unwrap();
+        let n: Real = nalgebra::convert(arr.nrows() as f64);
         let sigma = (y.transpose() * y) / (n - Real::one());
         sigma
     }
@@ -308,8 +312,11 @@ mod tests {
         let mut mu = OVector::<Real, C>::zeros_generic(vec_dim, nalgebra::Const);
         let scale: Real = Real::one() / na::convert(arr.nrows() as f64);
         for j in 0..arr.ncols() {
-            let col_sum = arr.column(j).iter().fold(Real::zero(), |acc, &x| acc + x);
-            mu[j] = col_sum * scale;
+            let col_sum = arr
+                .column(j)
+                .iter()
+                .fold(Real::zero(), |acc, x| acc + x.clone());
+            mu[j] = col_sum * scale.clone();
         }
         mu
     }
