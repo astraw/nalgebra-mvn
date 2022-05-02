@@ -43,9 +43,9 @@ where
     DefaultAllocator: Allocator<Real, Count, S>,
     DefaultAllocator: Allocator<Real, Count, Count>,
 {
-    let xs_lines = mat_to_vec_string!("xs", &xs);
-    let mu_lines = mat_to_vec_string!("mu", &mu);
-    let covar_lines = mat_to_vec_string!("covariance", &covariance);
+    let xs_lines = mat_to_vec_string!("xs", xs);
+    let mu_lines = mat_to_vec_string!("mu", mu);
+    let covar_lines = mat_to_vec_string!("covariance", covariance);
     let result_lines = mat_to_vec_string!("result", result);
 
     let x = vec![xs_lines, mu_lines, covar_lines, result_lines];
@@ -103,8 +103,8 @@ print('all results close')
 
     {
         let mut fd = std::fs::File::create(&py_fname).unwrap();
-        fd.write(buf.as_bytes()).unwrap();
-        fd.write(b"\n").unwrap();
+        fd.write_all(buf.as_bytes()).unwrap();
+        fd.write_all(b"\n").unwrap();
         fd.sync_all().unwrap();
     }
 

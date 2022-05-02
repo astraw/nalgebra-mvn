@@ -163,7 +163,7 @@ where
         DefaultAllocator: Allocator<Real, Count, N>,
         DefaultAllocator: Allocator<Real, Count, Count>,
     {
-        let dvs: nalgebra::OMatrix<Real, Count, N> = broadcast_add(&xs_t, &self.neg_mu);
+        let dvs: nalgebra::OMatrix<Real, Count, N> = broadcast_add(xs_t, &self.neg_mu);
 
         let left: nalgebra::OMatrix<Real, Count, N> = &dvs * &self.precision;
         let ny2_tmp: nalgebra::OMatrix<Real, Count, N> = left.component_mul(&dvs);
@@ -295,8 +295,8 @@ mod tests {
         let mu: OVector<Real, N> = mean_axis0(arr);
         let y = broadcast_add(arr, &-mu);
         let n: Real = nalgebra::convert(arr.nrows() as f64);
-        let sigma = (y.transpose() * y) / (n - Real::one());
-        sigma
+
+        (y.transpose() * y) / (n - Real::one())
     }
 
     /// Calculate the mean of R x C matrix along the rows and return C dim vector
