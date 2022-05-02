@@ -28,16 +28,13 @@ fn bench_pdf(c: &mut Criterion) {
 
     {
         let mvn = mvn.clone();
-        let xs = OMatrix::<f64, nalgebra::Dynamic, U2>::from_fn(
-            100000,
-            |row, col| {
-                if col == 0 {
-                    row as f64
-                } else {
-                    1.0
-                }
-            },
-        );
+        let xs = OMatrix::<f64, nalgebra::Dynamic, U2>::from_fn(100000, |row, col| {
+            if col == 0 {
+                row as f64
+            } else {
+                1.0
+            }
+        });
 
         c.bench_function("pdf_big", move |b| b.iter(|| mvn.pdf(&xs)));
     }
