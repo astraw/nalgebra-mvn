@@ -89,7 +89,7 @@ where
 impl<Real, N> MultivariateNormal<Real, N>
 where
     Real: RealField,
-    N: Dim + nalgebra::DimMin<N, Output = N> + nalgebra::DimSub<nalgebra::Dynamic>,
+    N: Dim + nalgebra::DimMin<N, Output = N> + nalgebra::DimSub<nalgebra::Dyn>,
     DefaultAllocator: Allocator<Real, N>,
     DefaultAllocator: Allocator<Real, N, N>,
     DefaultAllocator: Allocator<Real, nalgebra::U1, N>,
