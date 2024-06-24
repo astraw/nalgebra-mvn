@@ -73,10 +73,10 @@ pub struct MultivariateNormal<Real, N>
 where
     Real: RealField,
     N: Dim + nalgebra::DimMin<N, Output = N>,
-    DefaultAllocator: Allocator<Real, N>,
-    DefaultAllocator: Allocator<Real, N, N>,
-    DefaultAllocator: Allocator<Real, nalgebra::U1, N>,
-    DefaultAllocator: Allocator<(usize, usize), <N as nalgebra::DimMin<N>>::Output>,
+    DefaultAllocator: Allocator<N>,
+    DefaultAllocator: Allocator<N, N>,
+    DefaultAllocator: Allocator<nalgebra::U1, N>,
+    DefaultAllocator: Allocator<<N as nalgebra::DimMin<N>>::Output>,
 {
     /// Negative of mean of the distribution
     neg_mu: nalgebra::OVector<Real, N>,
@@ -90,10 +90,10 @@ impl<Real, N> MultivariateNormal<Real, N>
 where
     Real: RealField,
     N: Dim + nalgebra::DimMin<N, Output = N> + nalgebra::DimSub<nalgebra::Dyn>,
-    DefaultAllocator: Allocator<Real, N>,
-    DefaultAllocator: Allocator<Real, N, N>,
-    DefaultAllocator: Allocator<Real, nalgebra::U1, N>,
-    DefaultAllocator: Allocator<(usize, usize), <N as nalgebra::DimMin<N>>::Output>,
+    DefaultAllocator: Allocator<N>,
+    DefaultAllocator: Allocator<N, N>,
+    DefaultAllocator: Allocator<nalgebra::U1, N>,
+    DefaultAllocator: Allocator<<N as nalgebra::DimMin<N>>::Output>,
 {
     /// Create a multivariate normal distribution from a mean and precision
     ///
@@ -158,10 +158,10 @@ where
     ) -> nalgebra::OVector<Real, Count>
     where
         Count: Dim,
-        DefaultAllocator: Allocator<Real, Count>,
-        DefaultAllocator: Allocator<Real, N, Count>,
-        DefaultAllocator: Allocator<Real, Count, N>,
-        DefaultAllocator: Allocator<Real, Count, Count>,
+        DefaultAllocator: Allocator<Count>,
+        DefaultAllocator: Allocator<N, Count>,
+        DefaultAllocator: Allocator<Count, N>,
+        DefaultAllocator: Allocator<Count, Count>,
     {
         let dvs: nalgebra::OMatrix<Real, Count, N> = broadcast_add(xs_t, &self.neg_mu);
 
@@ -186,10 +186,10 @@ where
     ) -> nalgebra::OVector<Real, Count>
     where
         Count: Dim,
-        DefaultAllocator: Allocator<Real, Count>,
-        DefaultAllocator: Allocator<Real, N, Count>,
-        DefaultAllocator: Allocator<Real, Count, N>,
-        DefaultAllocator: Allocator<Real, Count, Count>,
+        DefaultAllocator: Allocator<Count>,
+        DefaultAllocator: Allocator<N, Count>,
+        DefaultAllocator: Allocator<Count, N>,
+        DefaultAllocator: Allocator<Count, Count>,
     {
         let y = self.inner_pdf(xs);
         vec_exp(&y) * self.fac.clone()
@@ -204,10 +204,10 @@ where
     ) -> nalgebra::OVector<Real, Count>
     where
         Count: Dim,
-        DefaultAllocator: Allocator<Real, Count>,
-        DefaultAllocator: Allocator<Real, N, Count>,
-        DefaultAllocator: Allocator<Real, Count, N>,
-        DefaultAllocator: Allocator<Real, Count, Count>,
+        DefaultAllocator: Allocator<Count>,
+        DefaultAllocator: Allocator<N, Count>,
+        DefaultAllocator: Allocator<Count, N>,
+        DefaultAllocator: Allocator<Count, Count>,
     {
         let y = self.inner_pdf(xs);
         vec_add(&y, self.fac.clone().ln())
@@ -218,7 +218,7 @@ fn vec_exp<Real, Count>(v: &nalgebra::OVector<Real, Count>) -> nalgebra::OVector
 where
     Real: RealField,
     Count: Dim,
-    DefaultAllocator: Allocator<Real, Count>,
+    DefaultAllocator: Allocator<Count>,
 {
     let nrows = Count::from_usize(v.nrows());
     OVector::from_iterator_generic(nrows, nalgebra::Const, v.iter().map(|vi| vi.clone().exp()))
@@ -231,7 +231,7 @@ fn vec_add<Real, Count>(
 where
     Real: RealField,
     Count: Dim,
-    DefaultAllocator: Allocator<Real, Count>,
+    DefaultAllocator: Allocator<Count>,
 {
     let nrows = Count::from_usize(v.nrows());
     OVector::from_iterator_generic(
@@ -253,8 +253,8 @@ where
     Real: RealField,
     R: Dim,
     C: Dim,
-    DefaultAllocator: Allocator<Real, R, C>,
-    DefaultAllocator: Allocator<Real, C>,
+    DefaultAllocator: Allocator<R, C>,
+    DefaultAllocator: Allocator<C>,
 {
     let ndim = arr.nrows();
     let nrows = R::from_usize(arr.nrows());
@@ -287,10 +287,10 @@ mod tests {
         arr: &OMatrix<Real, M, N>,
     ) -> nalgebra::OMatrix<Real, N, N>
     where
-        DefaultAllocator: Allocator<Real, M, N>,
-        DefaultAllocator: Allocator<Real, N, M>,
-        DefaultAllocator: Allocator<Real, N, N>,
-        DefaultAllocator: Allocator<Real, N>,
+        DefaultAllocator: Allocator<M, N>,
+        DefaultAllocator: Allocator<N, M>,
+        DefaultAllocator: Allocator<N, N>,
+        DefaultAllocator: Allocator<N>,
     {
         let mu: OVector<Real, N> = mean_axis0(arr);
         let y = broadcast_add(arr, &-mu);
@@ -305,8 +305,8 @@ mod tests {
         Real: RealField,
         R: Dim,
         C: Dim,
-        DefaultAllocator: Allocator<Real, R, C>,
-        DefaultAllocator: Allocator<Real, C>,
+        DefaultAllocator: Allocator<R, C>,
+        DefaultAllocator: Allocator<C>,
     {
         let vec_dim: C = C::from_usize(arr.ncols());
         let mut mu = OVector::<Real, C>::zeros_generic(vec_dim, nalgebra::Const);

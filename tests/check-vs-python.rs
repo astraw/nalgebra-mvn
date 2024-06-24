@@ -18,7 +18,7 @@ macro_rules! mat_to_vec_string {
             let l2 = line.join(", ");
             result.push(format!("    [{}],", l2));
         }
-        result.push(format!("], dtype=np.float)"));
+        result.push(format!("], dtype=np.float64)"));
 
         result
     }};
@@ -33,15 +33,15 @@ fn pythonize_expectations<Real, S, Count>(
 where
     Real: RealField,
     S: Dim + nalgebra::DimMin<S, Output = S>,
-    DefaultAllocator: Allocator<Real, S>,
-    DefaultAllocator: Allocator<Real, S, S>,
-    DefaultAllocator: Allocator<Real, nalgebra::U1, S>,
-    DefaultAllocator: Allocator<(usize, usize), <S as nalgebra::DimMin<S>>::Output>,
+    DefaultAllocator: Allocator<S>,
+    DefaultAllocator: Allocator<S, S>,
+    DefaultAllocator: Allocator<nalgebra::U1, S>,
+    DefaultAllocator: Allocator<<S as nalgebra::DimMin<S>>::Output>,
     Count: Dim,
-    DefaultAllocator: Allocator<Real, Count>,
-    DefaultAllocator: Allocator<Real, S, Count>,
-    DefaultAllocator: Allocator<Real, Count, S>,
-    DefaultAllocator: Allocator<Real, Count, Count>,
+    DefaultAllocator: Allocator<Count>,
+    DefaultAllocator: Allocator<S, Count>,
+    DefaultAllocator: Allocator<Count, S>,
+    DefaultAllocator: Allocator<Count, Count>,
 {
     let xs_lines = mat_to_vec_string!("xs", xs);
     let mu_lines = mat_to_vec_string!("mu", mu);
