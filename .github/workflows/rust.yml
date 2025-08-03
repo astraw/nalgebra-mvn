@@ -13,6 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install python and scipy
-        run: sudo apt-get install python3-scipy
+        run: |
+          # See https://github.com/actions/runner-images/issues/10977
+          echo 'set man-db/auto-update false' | sudo debconf-communicate >/dev/null
+          sudo dpkg-reconfigure man-db
+          # Now install scipy
+          sudo apt-get install python3-scipy
       - name: Run tests
         run: cargo test
