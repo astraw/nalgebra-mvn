@@ -102,7 +102,7 @@ print('all results close')
     let py_fname = "check-mvn.py";
 
     {
-        let mut fd = std::fs::File::create(&py_fname).unwrap();
+        let mut fd = std::fs::File::create(py_fname).unwrap();
         fd.write_all(buf.as_bytes()).unwrap();
         fd.write_all(b"\n").unwrap();
         fd.sync_all().unwrap();

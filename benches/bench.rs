@@ -40,7 +40,6 @@ fn bench_pdf(c: &mut Criterion) {
     }
 
     {
-        let mvn = mvn;
         // input samples are row vectors vertically stacked
         let xs = OMatrix::<_, U3, U2>::new(8.9, 1.0, 9.0, 1.0, 9.1, 1.0);
 
